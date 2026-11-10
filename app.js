@@ -1,130 +1,50 @@
-// Isi dengan URL Worker setelah backend berhasil dipublikasikan.
-const API_URL = "PASTE_CLOUDFLARE_WORKER_URL_HERE";
-
-const input = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
-const feed = document.getElementById("chatFeed");
-const welcome = document.getElementById("welcome");
-const newChat = document.getElementById("newChat");
-const menuToggle = document.getElementById("menuToggle");
-const sidebar = document.getElementById("sidebar");
-
-let history = [];
-
-function showChat() {
-  welcome.style.display = "none";
-  feed.classList.add("active");
+const files={html:`<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project DEX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>Halo, Developer!</h1>
+    <p>Selamat datang di project pertamamu.</p>
+    <button id="hello">Klik saya</button>
+  </main>
+  <script src="script.js"><\/script>
+</body>
+</html>`,css:`body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #101827;
+  color: white;
+  font-family: Arial, sans-serif;
 }
-function addMessage(role, content, isError = false) {
-  showChat();
-  const bubble = document.createElement("div");
-  bubble.className = `message ${role}`;
-  const label = document.createElement("div");
-  label.className = "message-label";
-  label.textContent = role === "user" ? "YOU" : (isError ? "SYSTEM NOTICE" : "DEX AI");
-  bubble.appendChild(label);
-
-  // Pisahkan blok kode agar mudah disalin. Semua isi dibuat dengan textContent
-  // supaya teks balasan AI tidak dieksekusi sebagai HTML.
-  const parts = String(content).split(/```([\w+-]*)\n?([\s\S]*?)```/g);
-  for (let i = 0; i < parts.length; i += 3) {
-    if (parts[i]) {
-      const p = document.createElement("div");
-      p.textContent = parts[i].trim();
-      bubble.appendChild(p);
-    }
-    if (i + 2 < parts.length) {
-      const lang = parts[i + 1] || "code";
-      const code = parts[i + 2].replace(/\n$/, "");
-      const wrap = document.createElement("div");
-      wrap.className = "code-block";
-      const head = document.createElement("div");
-      head.className = "code-head";
-      const tag = document.createElement("span");
-      tag.textContent = lang.toUpperCase();
-      const copy = document.createElement("button");
-      copy.className = "copy-code";
-      copy.textContent = "COPY";
-      copy.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(code);
-          copy.textContent = "COPIED";
-          setTimeout(() => copy.textContent = "COPY", 1200);
-        } catch { copy.textContent = "GAGAL"; }
-      });
-      head.append(tag, copy);
-      const pre = document.createElement("pre");
-      pre.textContent = code;
-      wrap.append(head, pre);
-      bubble.appendChild(wrap);
-    }
-  }
-  feed.appendChild(bubble);
-  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-  return bubble;
+.card {
+  text-align: center;
+  padding: 32px;
+  border: 1px solid #00eaff;
+  border-radius: 16px;
 }
-function setLoading(loading) {
-  sendButton.disabled = loading;
-  sendButton.textContent = loading ? "…" : "➤";
-}
-async function sendMessage(text) {
-  const prompt = text.trim();
-  if (!prompt || sendButton.disabled) return;
-  if (API_URL.includes("PASTE_CLOUDFLARE")) {
-    addMessage("assistant", "Backend belum diatur. Selesaikan tahap Cloudflare Worker, lalu tempel URL Worker ke variabel API_URL di app.js.");
-    return;
-  }
-  addMessage("user", prompt);
-  history.push({ role: "user", content: prompt });
-  input.value = "";
-  input.style.height = "auto";
-  const loadingBubble = addMessage("assistant", "Menghubungkan ke AI core...");
-  setLoading(true);
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: history.slice(-12) })
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
-    if (!data.reply) throw new Error("Balasan AI kosong.");
-    loadingBubble.remove();
-    history.push({ role: "assistant", content: data.reply });
-    addMessage("assistant", data.reply);
-  } catch (error) {
-    loadingBubble.remove();
-    history.pop();
-    addMessage("assistant", `Gagal menghubungi AI: ${error.message}\nPeriksa URL Worker, API key, dan koneksi internet.`, true);
-  } finally {
-    setLoading(false);
-    input.focus();
-  }
-}
-sendButton.addEventListener("click", () => sendMessage(input.value));
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage(input.value);
-  }
-});
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  input.style.height = Math.min(input.scrollHeight, 170) + "px";
-});
-document.querySelectorAll("[data-prompt]").forEach(button => {
-  button.addEventListener("click", () => {
-    input.value = button.dataset.prompt;
-    input.focus();
-    input.setSelectionRange(input.value.length, input.value.length);
-  });
-});
-newChat.addEventListener("click", () => {
-  history = [];
-  feed.innerHTML = "";
-  feed.classList.remove("active");
-  welcome.style.display = "";
-  sidebar.classList.remove("open");
-  input.value = "";
-});
-menuToggle.addEventListener("click", () => sidebar.classList.toggle("open"));
+button { padding: 10px 18px; background: #00eaff; border: 0; border-radius: 6px; }`,js:`document.querySelector("#hello")?.addEventListener("click", () => {
+  alert("DEX AI preview berhasil!");
+});`};
+let active='html';const code=document.querySelector('#code'),gutter=document.querySelector('#gutter'),preview=document.querySelector('#preview');
+function updateGutter(){let n=code.value.split('\n').length;gutter.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');document.querySelector('#lineInfo').textContent=`Ln ${code.value.substr(0,code.selectionStart).split('\n').length}, Col 1`}
+function render(){let src=files.html.replace('<link rel="stylesheet" href="style.css">',`<style>${files.css}</style>`).replace('<script src="script.js"></script>',`<script>${files.js}<\/script>`);preview.srcdoc=src}
+function load(){code.value=files[active];document.querySelectorAll('[data-file]').forEach(b=>b.classList.toggle('selected',b.dataset.file===active));document.querySelector('#fileInfo').textContent=active.toUpperCase()+' · LOCAL';updateGutter();render()}
+code.addEventListener('input',()=>{files[active]=code.value;updateGutter();render()});code.addEventListener('click',updateGutter);code.addEventListener('keyup',updateGutter);
+document.querySelectorAll('[data-file]').forEach(b=>b.onclick=()=>{files[active]=code.value;active=b.dataset.file;load()});
+document.querySelector('#refresh').onclick=()=>{files[active]=code.value;render()};
+document.querySelector('#saveBtn').onclick=()=>{files[active]=code.value;localStorage.setItem('dexai-project',JSON.stringify(files));alert('Project tersimpan di browser ini.')};
+try{const old=JSON.parse(localStorage.getItem('dexai-project'));if(old)Object.assign(files,old)}catch{}
+document.querySelector('#newProject').onclick=()=>{if(confirm('Buat project baru?')){Object.assign(files,{html:'<!doctype html>\\n<html>\\n<body>\\n<h1>Project Baru</h1>\\n</body>\\n</html>',css:'body { font-family: Arial; }',js:'// Tulis JavaScript di sini'});load()}};
+document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='html')active='html';if(b.dataset.action==='js')active='js';if(b.dataset.action==='clear')files[active]='';load()});
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{let a=b.dataset.tab==='assistant';document.querySelector('#studioView').classList.toggle('hidden',a);document.querySelector('#assistantView').classList.toggle('hidden',!a);document.querySelector('#viewName').textContent=a?'AI ASSISTANT':'CODE STUDIO';document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n===b));document.querySelector('#sidebar').classList.remove('open')});
+document.querySelector('#hamb').onclick=()=>document.querySelector('#sidebar').classList.toggle('open');
+document.querySelector('#openPreview').onclick=()=>{let w=window.open();if(w){w.document.write(files.html.replace('<link rel="stylesheet" href="style.css">',`<style>${files.css}</style>`).replace('<script src="script.js"></script>',`<script>${files.js}<\/script>`));w.document.close()}};
+document.querySelector('#chatSend').onclick=()=>{let t=document.querySelector('#chatInput');if(!t.value.trim())return;let p=document.createElement('p');p.textContent='AI online belum dihubungkan. Pertanyaan kamu: '+t.value;document.querySelector('#chatLog').append(p);t.value=''};
+load();
