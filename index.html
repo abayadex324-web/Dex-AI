@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070914">
+  <meta name="description" content="DEX AI - Cyberpunk coding assistant">
+  <title>DEX AI — Coding Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">D</div>
+        <div><div class="brand-name">DEX<span>AI</span></div><small>CODE BEYOND LIMITS</small></div>
+      </div>
+      <button class="new-chat" id="newChat"><span>＋</span> New session</button>
+      <div class="side-label">QUICK PROMPTS</div>
+      <button class="prompt-chip" data-prompt="Buatkan website portfolio modern menggunakan HTML, CSS, dan JavaScript.">▸ Buat website</button>
+      <button class="prompt-chip" data-prompt="Jelaskan kode JavaScript ini secara bertahap: ">▸ Jelaskan kode</button>
+      <button class="prompt-chip" data-prompt="Bantu debug kode berikut. Cari penyebab error dan berikan versi perbaikannya: ">▸ Debug error</button>
+      <button class="prompt-chip" data-prompt="Buatkan contoh project Node.js sederhana beserta struktur foldernya.">▸ Project Node.js</button>
+      <div class="sidebar-bottom">
+        <div class="status-line"><i></i> SYSTEM ONLINE</div>
+        <small>DEX AI · BUILD 1.0</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuToggle" aria-label="Buka menu">☰</button>
+        <div class="top-title"><span class="pulse-dot"></span> DEX AI <small>/ CODING ASSISTANT</small></div>
+        <div class="top-right"><span class="model-tag">AI CORE</span></div>
+      </header>
+
+      <section class="workspace">
+        <div class="welcome" id="welcome">
+          <div class="eyebrow">✦ YOUR PERSONAL CODE COMPANION</div>
+          <h1>BUILD THE<br><span>FUTURE.</span></h1>
+          <p>Halo, developer. Apa yang ingin kamu buat hari ini?</p>
+          <div class="feature-grid">
+            <button class="feature-card" data-prompt="Buatkan contoh kode HTML dan CSS untuk halaman login futuristik."><b>⌘</b><strong>Generate code</strong><small>Buat kode dari ide kamu</small></button>
+            <button class="feature-card" data-prompt="Saya punya error di kode ini. Tolong analisis dan perbaiki: "><b>⌁</b><strong>Debug code</strong><small>Temukan dan perbaiki bug</small></button>
+            <button class="feature-card" data-prompt="Jelaskan konsep pemrograman berikut dengan bahasa sederhana: "><b>◈</b><strong>Learn coding</strong><small>Belajar dari dasar</small></button>
+            <button class="feature-card" data-prompt="Review kode berikut. Berikan saran peningkatan keamanan, performa, dan keterbacaan: "><b>⌬</b><strong>Code review</strong><small>Tingkatkan kualitas kode</small></button>
+          </div>
+        </div>
+
+        <div class="chat-feed" id="chatFeed" aria-live="polite"></div>
+
+        <div class="composer-wrap">
+          <div class="composer">
+            <textarea id="messageInput" rows="1" placeholder="Tanya DEX AI tentang coding..." maxlength="12000"></textarea>
+            <div class="composer-footer">
+              <span class="hint">ENTER untuk kirim · SHIFT + ENTER untuk baris baru</span>
+              <button id="sendButton" class="send-button" aria-label="Kirim pesan">➤</button>
+            </div>
+          </div>
+          <div class="disclaimer">DEX AI dapat membuat kesalahan. Periksa kode sebelum menjalankannya.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="./app.js"></script>
+</body>
+</html>
